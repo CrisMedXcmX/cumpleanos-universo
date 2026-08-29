@@ -213,11 +213,11 @@ export class MemoryPlanets {
     const memoryData = birthdayConfig.memories;
     const segs = this.quality === 'low' ? 32 : 64;
 
+    // Posiciones balanceadas para 3 planetas en un arco cósmico
     const positions = [
-      new THREE.Vector3(-95, 24, 45),   // 1: Rosa Cuarzo Terrestre (Sin anillos, con Nubes y Luna Cristal)
-      new THREE.Vector3(-38, 48, -85),  // 2: Saturno Auténtico (Anillos majestuosos y bandas doradas)
-      new THREE.Vector3(52, 36, -75),   // 3: Carmesí Magma (Sin anillos, con Cinturón de Asteroides 3D)
-      new THREE.Vector3(108, 16, 50)    // 4: Gigante de Hielo (Anillo polar fino vertical y Auroras)
+      new THREE.Vector3(-85, 24, 40),   // 1: Rosa Cuarzo Terrestre
+      new THREE.Vector3(-15, 46, -88),  // 2: Saturno Auténtico Dorado
+      new THREE.Vector3(78, 30, 25)     // 3: Carmesí Magma (Galería)
     ];
 
     memoryData.forEach((data, index) => {

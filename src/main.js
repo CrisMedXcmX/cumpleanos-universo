@@ -148,8 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let isInMoonView = false;
 
   const exitMoonView = () => {
-    if (!isInMoonView) return;
     isInMoonView = false;
+    if (navigationManager) navigationManager.isInMoonView = false;
     if (btnExitMoon) btnExitMoon.classList.remove('visible');
 
     const isMobile = window.innerWidth < 768;
@@ -173,6 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
       soundManager.playClickSound();
       exitMoonView();
     });
+  }
+
+  // Sincronizar salida de la luna si navigationManager cambia de paso
+  if (navigationManager) {
+    navigationManager.onExitMoon = () => {
+      isInMoonView = false;
+      if (btnExitMoon) btnExitMoon.classList.remove('visible');
+    };
   }
 
   // 8. Eventos de Selección Táctil / Click (Raycasting 3D)
@@ -215,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Verificar si se hizo click en el Sol Central
     const sunIntersects = raycaster.intersectObject(centralSun.coreMesh);
     if (sunIntersects.length > 0) {
-      if (isInMoonView) exitMoonView();
+      if (isInMoonView || navigationManager.isInMoonView) exitMoonView();
       navigationManager.openSunSupernova(e.clientX, e.clientY);
       return;
     }
@@ -224,11 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const hitObj = memoryPlanets.getIntersectedObject(normalizedPointer, appScene.camera);
     if (hitObj) {
       if (hitObj.userData && hitObj.userData.type === 'memoryPlanet') {
-        if (isInMoonView) exitMoonView();
+        if (isInMoonView || navigationManager.isInMoonView) exitMoonView();
         memoryModal.openMemory(hitObj.userData.index);
       } else if (hitObj.userData && hitObj.userData.isMoon) {
-        if (isInMoonView) {
-          // Si ya estamos viendo a Snoopy, al hacerle click salta, gira alegremente y saluda
+        // Si ya estamos viendo la Luna (sea por click o por navegación del HUD), solo saludar y animar a Snoopy
+        const alreadyInMoon = isInMoonView || (navigationManager && navigationManager.isInMoonView);
+        if (alreadyInMoon) {
           soundManager.playStardustChime();
           if (memoryPlanets) {
             memoryPlanets.triggerMoonSnoopyClick();
@@ -237,6 +246,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         isInMoonView = true;
+        if (navigationManager) {
+          navigationManager.isInMoonView = true;
+          navigationManager.currentStep = 3;
+          navigationManager.markMoonVisited();
+          navigationManager.updateTimelineUI();
+        }
+
         const snoopyTargetPos = new THREE.Vector3(0, 81.6, -134.6);
         const flightDuration = 3.0;
 

@@ -10,8 +10,11 @@ export class SnoopyPlane {
     // Configuración del Vuelo
     this.isFlying = true;
     this.flightSpeed = 26;
-    this.startX = -280;
-    this.endX = 280;
+    this.flightDirection = 1; // 1 = hacia la derecha (+X), -1 = hacia la izquierda (-X)
+    this.isTurning = false;
+    this.minX = -260;
+    this.maxX = 260;
+    this.startX = -260;
     this.baseY = 22;
     this.baseZ = -35;
     this.isDoingBarrelRoll = false;
@@ -443,12 +446,75 @@ export class SnoopyPlane {
   }
 
   resetFlight() {
+    this.flightDirection = 1;
+    this.isTurning = false;
     this.group.position.set(this.startX, this.baseY, this.baseZ);
     this.planeMeshGroup.quaternion.identity();
     this.planeMeshGroup.scale.set(0.85, 0.85, 0.85);
     this.isFlying = true;
     this.isOrbitingPlanet = false;
     this.currentThrottle = 1.0;
+  }
+
+  turnAround() {
+    if (this.isTurning || !this.isFlying || this.isOrbitingPlanet) return;
+    this.isTurning = true;
+
+    const startPos = this.group.position.clone();
+    const targetDirection = -this.flightDirection;
+    const turnRadius = 14.0;
+    const turnDuration = 2.4;
+
+    // Altura y profundidad ligeramente aleatorias para variar el vuelo
+    const newBaseY = 20 + (Math.random() - 0.5) * 12;
+    const newBaseZ = -35 + (Math.random() - 0.5) * 10;
+    this.baseY = newBaseY;
+    this.baseZ = newBaseZ;
+
+    // Arco semicircular en 3D para el viraje suave (U-turn)
+    const turnObj = { t: 0 };
+    const initialAngle = this.flightDirection === 1 ? -Math.PI / 2 : Math.PI / 2;
+
+    this.flightTween = gsap.to(turnObj, {
+      t: 1,
+      duration: turnDuration,
+      ease: 'power1.inOut',
+      onUpdate: () => {
+        const t = turnObj.t;
+        const currentAngle = initialAngle + t * Math.PI * (this.flightDirection === 1 ? 1 : -1);
+
+        // Desplazamiento en curva circular (X y Z)
+        const forwardOffset = Math.sin(t * Math.PI) * (turnRadius * 0.8) * this.flightDirection;
+        const depthOffset = (1 - Math.cos(t * Math.PI)) * turnRadius * 0.5;
+
+        this.group.position.x = startPos.x + forwardOffset;
+        this.group.position.z = startPos.z + depthOffset;
+        this.group.position.y = THREE.MathUtils.lerp(startPos.y, newBaseY, t);
+
+        // Vector tangente para orientar la trompa en todo el giro
+        const tangentX = Math.cos(currentAngle) * targetDirection;
+        const tangentZ = Math.sin(currentAngle) * (this.flightDirection === 1 ? 1 : -1);
+        const tangentY = (newBaseY - startPos.y) / turnDuration * 0.05;
+
+        const velocityVec = new THREE.Vector3(
+          this.flightDirection === 1 ? Math.cos(t * Math.PI) : -Math.cos(t * Math.PI),
+          tangentY,
+          Math.sin(t * Math.PI) * (this.flightDirection === 1 ? 1 : -1)
+        );
+
+        // Inclinación de alas (banking) durante el giro
+        const bankAngle = Math.sin(t * Math.PI) * (this.flightDirection === 1 ? -0.55 : 0.55);
+        this.orientNoseAlongVelocity(velocityVec, bankAngle);
+
+        if (Math.random() < 0.5) {
+          this.spawnSmokeParticle();
+        }
+      },
+      onComplete: () => {
+        this.flightDirection = targetDirection;
+        this.isTurning = false;
+      }
+    });
   }
 
   triggerBarrelRoll() {
@@ -740,29 +806,31 @@ export class SnoopyPlane {
         this.spawnSmokeParticle();
       }
     }
-    // 4. ESTADO: VUELO DE CRUCERO LIBRE
+    // 4. ESTADO: VUELO DE CRUCERO LIBRE (IDA Y VUELTA FLUIDA)
     else if (this.isFlying) {
-      this.group.position.x += this.flightSpeed * delta;
+      if (!this.isTurning) {
+        this.group.position.x += this.flightSpeed * this.flightDirection * delta;
 
-      const waveY = Math.sin(elapsed * 1.4) * 3.8;
-      this.group.position.y = this.baseY + waveY;
+        const waveY = Math.sin(elapsed * 1.4) * 3.8;
+        this.group.position.y = this.baseY + waveY;
 
-      if (!this.isDoingBarrelRoll) {
-        this.orientNoseAlongVelocity(new THREE.Vector3(1, Math.cos(elapsed * 1.4) * 0.2, 0), 0);
-      }
+        if (!this.isDoingBarrelRoll) {
+          this.orientNoseAlongVelocity(
+            new THREE.Vector3(this.flightDirection, Math.cos(elapsed * 1.4) * 0.2, 0),
+            0
+          );
+        }
 
-      if (Math.random() < 0.4) {
-        this.spawnSmokeParticle();
-      }
+        if (Math.random() < 0.35) {
+          this.spawnSmokeParticle();
+        }
 
-      if (this.group.position.x > this.endX) {
-        this.isFlying = false;
-        const nextWait = 8000 + Math.random() * 6000;
-        setTimeout(() => {
-          this.baseY = 20 + (Math.random() - 0.5) * 16;
-          this.baseZ = -35 + (Math.random() - 0.5) * 8;
-          this.resetFlight();
-        }, nextWait);
+        // Si llega al extremo derecho o izquierdo, iniciar giro en U suavemente
+        if (this.flightDirection === 1 && this.group.position.x >= this.maxX) {
+          this.turnAround();
+        } else if (this.flightDirection === -1 && this.group.position.x <= this.minX) {
+          this.turnAround();
+        }
       }
     }
 

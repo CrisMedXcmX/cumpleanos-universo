@@ -128,7 +128,7 @@ export class MemoryModalController {
         this.snoopyPlane.flyToPlanet(targetPos, travelDuration);
       }
 
-      const romanticMessage = mem.description || mem.snoopyDialogue;
+      const dialogueText = mem.snoopyDialogue || mem.description || '';
 
       // 3. Cámara en 3ra Persona: Viaja directamente detrás de Snoopy disfrutando el vuelo sin modales
       this.cameraController.escortCompanionToPlanet(this.snoopyPlane.group, targetPos, travelDuration, () => {
@@ -143,7 +143,7 @@ export class MemoryModalController {
           if (this.galleryView) this.galleryView.style.display = 'flex';
 
           if (this.galleryMainTitle) this.galleryMainTitle.textContent = mem.title;
-          if (this.galleryMainDesc) this.galleryMainDesc.textContent = mem.description;
+          if (this.galleryMainDesc) this.galleryMainDesc.textContent = mem.description || '';
           this.renderGalleryItems(mem.gallery);
         } else {
           this.cardModal.classList.remove('is-gallery');
@@ -151,14 +151,17 @@ export class MemoryModalController {
           if (this.singleView) this.singleView.style.display = 'block';
 
           if (this.titleEl) this.titleEl.textContent = mem.title;
-          if (this.descEl) this.descEl.textContent = mem.description;
+          if (this.descEl) this.descEl.textContent = mem.description || '';
           if (this.imgEl) this.imgEl.src = mem.image;
         }
 
-        // 5. Abrir diálogo y narrar
+        // 5. Abrir diálogo, restablecer scroll al inicio y narrar
         this.modal.classList.add('active');
+        if (this.cardModal) this.cardModal.scrollTop = 0;
+        if (this.modal) this.modal.scrollTop = 0;
+
         this.soundManager.playStardustChime();
-        this.playSnoopyDialogue(romanticMessage);
+        this.playSnoopyDialogue(dialogueText);
         this.isTransitioning = false;
       });
     } else {
@@ -199,22 +202,57 @@ export class MemoryModalController {
   renderGalleryItems(items) {
     this.galleryGridContainer.innerHTML = '';
 
+    const lightboxModal = document.getElementById('gallery-lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDesc = document.getElementById('lightbox-desc');
+    const btnCloseLightbox = document.getElementById('btn-close-lightbox');
+
+    const openLightbox = (item) => {
+      if (this.soundManager) this.soundManager.playClickSound();
+      if (lightboxImg) lightboxImg.src = item.image;
+      if (lightboxTitle) lightboxTitle.textContent = item.title;
+      if (lightboxDesc) lightboxDesc.textContent = item.description || '';
+      if (lightboxModal) lightboxModal.classList.add('active');
+    };
+
+    if (btnCloseLightbox && !this._lightboxInitialized) {
+      btnCloseLightbox.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (lightboxModal) lightboxModal.classList.remove('active');
+      });
+      if (lightboxModal) {
+        lightboxModal.addEventListener('click', (e) => {
+          if (e.target === lightboxModal) {
+            lightboxModal.classList.remove('active');
+          }
+        });
+      }
+      this._lightboxInitialized = true;
+    }
+
     items.forEach((item, i) => {
       const card = document.createElement('div');
       card.className = 'gallery-item-card';
+      card.title = `Toca para ver en grande: ${item.title}`;
       card.innerHTML = `
         <div class="gallery-thumb-wrap">
           <img src="${item.image}" alt="${item.title}" class="gallery-thumb-img" loading="lazy" />
         </div>
         <div class="gallery-item-info">
           <h4 class="gallery-item-title">${item.title}</h4>
-          <p class="gallery-item-desc">${item.description}</p>
+          ${item.description ? `<p class="gallery-item-desc">${item.description}</p>` : ''}
         </div>
       `;
 
       const img = card.querySelector('.gallery-thumb-img');
       img.addEventListener('error', () => {
         img.src = `assets/galeria${i + 1}.svg`;
+      });
+
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openLightbox(item);
       });
 
       this.galleryGridContainer.appendChild(card);

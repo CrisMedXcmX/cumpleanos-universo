@@ -66,6 +66,39 @@ export class LetterModalController {
         }
       });
     }
+
+    // Detectar cuando el usuario hace scroll hasta el final del texto
+    if (this.letterBody) {
+      this.letterBody.addEventListener('scroll', () => {
+        this.checkScrollEnd();
+      });
+    }
+  }
+
+  checkScrollEnd() {
+    if (!this.letterBody || this.isButtonVisible) return;
+
+    // Margen de tolerancia de 25px
+    const isAtBottom = (this.letterBody.scrollTop + this.letterBody.clientHeight) >= (this.letterBody.scrollHeight - 25);
+    
+    // Si el contenido cabe entero sin necesidad de scroll o si llegó al final
+    const noScrollNeeded = this.letterBody.scrollHeight <= (this.letterBody.clientHeight + 10);
+
+    if ((isAtBottom || noScrollNeeded) && !this.isTyping) {
+      this.showAfterLetterButton();
+    }
+  }
+
+  showAfterLetterButton() {
+    if (this.isButtonVisible || !this.btnAfterLetter) return;
+    this.isButtonVisible = true;
+
+    gsap.to(this.btnAfterLetter, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'back.out(1.5)'
+    });
   }
 
   showSection() {
@@ -85,12 +118,14 @@ export class LetterModalController {
     if (this.envelopeWrapper) this.envelopeWrapper.classList.add('hidden');
     if (this.parchmentWrapper) this.parchmentWrapper.classList.add('visible');
     this.isOpened = true;
+    this.isButtonVisible = false;
     this.hideBackgroundHUD();
     this.startTypewriter();
   }
 
   openLetter() {
     this.isOpened = true;
+    this.isButtonVisible = false;
     this.soundManager.playClickSound();
     this.soundManager.playStardustChime();
     this.hideBackgroundHUD();
@@ -166,18 +201,17 @@ export class LetterModalController {
 
     this.letterBody.scrollTop = 0;
 
-    gsap.to(this.btnAfterLetter, {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    });
+    // Comprobar si no requiere scroll o esperar a que el usuario baje
+    setTimeout(() => {
+      this.checkScrollEnd();
+    }, 100);
   }
 
   async startTypewriter() {
     if (this.isTyping) return;
     this.isTyping = true;
     this.hasFinishedTyping = false;
+    this.isButtonVisible = false;
     this.letterBody.innerHTML = '';
 
     if (this.btnAfterLetter) {
@@ -202,26 +236,19 @@ export class LetterModalController {
         if (!this.isTyping) break;
 
         cursor.insertAdjacentText('beforebegin', text[cIdx]);
-        this.letterBody.scrollTop = this.letterBody.scrollHeight;
 
         const delay = text[cIdx] === ' ' ? 8 : (text[cIdx] === '.' || text[cIdx] === ',') ? 35 : 12;
         await new Promise(r => setTimeout(r, delay));
       }
 
       cursor.remove();
-      this.letterBody.scrollTop = this.letterBody.scrollHeight;
       await new Promise(r => setTimeout(r, 90));
     }
 
     this.hasFinishedTyping = true;
     this.isTyping = false;
 
-    // Mostrar botón de reinicio sutil
-    gsap.to(this.btnAfterLetter, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: 'power2.out'
-    });
+    // Al terminar el tipeo, verificar si el texto cabe completo sin scroll
+    this.checkScrollEnd();
   }
 }

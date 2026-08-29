@@ -15,9 +15,9 @@ export const birthdayConfig = {
   // --- SECCIÓN 1: INTRODUCCIÓN ("Para ti") ---
   intro: {
     badge: "✦ UNA HISTORIA ESPECIAL ✦",
-    quoteLine1: "Nuestro Universo",
+    quoteLine1: "Feliz Cumpleaños",
     quoteLine2: "Un viaje a través de las estrellas creado para ti",
-    dedication: "Esta experiencia fue creada con todo mi amor ❤️",
+    dedication: "Esta experiencia fue creada con todo mi cariño ❤️",
     startButton: "INICIAR VIAJE",
     hint: "Usa audífonos para una mejor experiencia"
   },
@@ -38,12 +38,12 @@ export const birthdayConfig = {
     {
       id: "memory-1",
       icon: "🌙",
-      title: "Nuestro primer momento",
+      title: "Un recuerdo especial",
       subtitle: "El inicio de algo mágico",
-      date: "Aquel primer día",
+      date: "",
       snoopyDialogue: "¡Woof! 🐾 ¡Aterrizamos en las coordenadas del Capítulo I! Desde aquel primer instante en que sus miradas se cruzaron, supe que empezaba la historia más bonita de todas...",
-      description: "Recuerdo perfectamente el momento en que nuestras miradas se cruzaron por primera vez. No sabía entonces que en ese instante mi mundo cambiaría para siempre y empezaría la historia más bonita de mi vida.",
-      image: "assets/foto1.jpg",
+      description: "A pesar de las adversidades, eres una persona que ha salido de cosas muy difíciles, ha logrado avanzar en la vida sin importar nada, y quiero que logremos avanzar para crecer juntos.💕",
+      image: "assets/foto1.jpeg",
       color: 0xf3a6b2, // Rosa cuarzo
       emissive: 0x6e1b34,
       tag: "Capítulo I"
@@ -51,12 +51,12 @@ export const birthdayConfig = {
     {
       id: "memory-2",
       icon: "✨",
-      title: "Ese día que no voy a olvidar",
+      title: "Atardecer para dedicar",
       subtitle: "Grabado en el corazón",
       date: "Un instante eterno",
-      snoopyDialogue: "¡Aterrizaje perfecto, capitán! ✨ Este planeta guarda una tarde mágica e inolvidable. El tiempo se detuvo y las risas quedaron grabadas para siempre en el cosmos.",
-      description: "Hay días que se quedan grabados para siempre. Aquella tarde en la que el tiempo pareció detenerse, donde las risas no faltaron y entendí que contigo cualquier lugar ordinario se convierte en el lugar más especial.",
-      image: "assets/foto2.jpg",
+      snoopyDialogue: "¡Aterrizaje perfecto, capitán! ✨ Este planeta guarda una tarde mágica e inolvidable.",
+      description: "Si tuviera que buscar palabras para explicar lo linda que eres, usaría este atardecer. Tan imponente, lleno de luz y capaz de detener el tiempo de la misma manera que lo haces tú cada vez que sonríes.",
+      image: "assets/foto2.jpeg",
       color: 0xf5d77f, // Oro estelar
       emissive: 0x5a4510,
       tag: "Capítulo II"
@@ -68,62 +68,49 @@ export const birthdayConfig = {
       subtitle: "Colección especial de fotos y memorias",
       date: "Nuestra Galería",
       snoopyDialogue: "¡Guau! 💖 ¡Detecté una colección de 6 momentos extraordinarios en este planeta! Cada foto guarda un abrazo o una sonrisa. ¡Toca cada una para verla de cerca!",
-      description: "Cada una de estas 6 fotografías guarda una historia, una risa o un instante que hace que mi mundo sea perfecto a tu lado:",
+      description: "Cada una de estas 6 fotografías guarda una historia, una risa o un instante espectacular en tu vida",
       isGallery: true,
       gallery: [
         {
           id: 1,
-          title: "1. Risas Inolvidables",
-          description: "Esa risa espontánea y contagiosa que ilumina cualquier día por más gris que parezca.",
+          title: "1. MDE",
+          description: "",
           image: "assets/galeria1.jpg"
         },
         {
           id: 2,
-          title: "2. Nuestras Aventuras",
-          description: "Cualquier viaje o salida improvisada donde lo único que importaba era estar juntos.",
+          title: "2. CLO",
+          description: "",
           image: "assets/galeria2.jpg"
         },
         {
           id: 3,
-          title: "3. La Magia de tu Mirada",
-          description: "La complicidad y la paz infinita que siento cada vez que me miras.",
+          title: "3. BUN",
+          description: "",
           image: "assets/galeria3.jpg"
         },
         {
           id: 4,
-          title: "4. Días Simples, Recuerdos Eternos",
-          description: "Esos momentos cotidianos donde no necesitamos nada más que nuestra compañía.",
+          title: "4. RCH",
+          description: "",
           image: "assets/galeria4.jpg"
         },
         {
           id: 5,
-          title: "5. Tu Apoyo Incondicional",
-          description: "Gracias por estar siempre ahí, por tus abrazos cálidos y por creer siempre en mí.",
+          title: "5. PTY",
+          description: "",
           image: "assets/galeria5.jpg"
         },
         {
           id: 6,
-          title: "6. Por Todo lo que Eres",
-          description: "Por tu dulzura, tu bondad, tu belleza y por ser mi persona favorita en todo el universo.",
+          title: "6. ?",
+          description: "",
           image: "assets/galeria6.jpg"
         }
       ],
       color: 0xe63956, // Rojo carmesí profundo
       emissive: 0x4a0e19,
       tag: "Capítulo III"
-    },
-    {
-      id: "memory-4",
-      icon: "🪐",
-      title: "Los momentos que nos quedan por vivir",
-      subtitle: "Un futuro infinito",
-      date: "Por siempre",
-      snoopyDialogue: "¡Mirando hacia el horizonte! 🪐 Todo lo vivido hasta hoy es maravilloso, pero lo que viene será aún más grandioso. ¡Nos queda un universo entero por explorar!",
-      description: "Esto es solo el comienzo. Sueño con todos los viajes que haremos, los atardeceres que veremos juntos, las metas que celebraremos y cada uno de los cumpleaños que vendrán. El universo entero nos espera.",
-      image: "assets/foto4.jpg",
-      color: 0x70d6ff, // Azul celeste aurora
-      emissive: 0x0e3b52,
-      tag: "Capítulo IV"
     }
   ],
 
@@ -137,11 +124,11 @@ export const birthdayConfig = {
       "Hoy no quiero simplemente decirte feliz cumpleaños.",
       "Quiero recordarte lo extraordinariamente especial que eres para mí.",
       "Gracias por cada sonrisa compartida, cada mirada cómplice, cada conversación de madrugada y cada recuerdo inolvidable que hemos construido juntos.",
-      "Eres esa luz cálida que hace que todo valga la pena, mi refugio de calma y mi mayor alegría en este universo.",
+      "Aunque sé que no soy bueno para las manualidades, que sepas que esto lo hice con mis manos, y con la emoción de ver esa sonrisa cuando veas esto.",
       "Espero poder seguir creando infinitas memorias y celebrando la vida a tu lado.",
       "Feliz cumpleaños, mi amor. ❤️"
     ],
-    signOff: "Con todo mi amor y devoción,",
+    signOff: "Con todo mi cariño y devoción,",
     signature: "Tu persona favorita"
   },
 

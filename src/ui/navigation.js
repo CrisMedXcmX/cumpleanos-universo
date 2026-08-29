@@ -15,10 +15,11 @@ export class NavigationManager {
     this.snoopyPlane = snoopyPlane;
     this.letter3D = letter3D;
 
-    this.currentStep = 0; // 0: Planeta 1, 1: Planeta 2, 2: Planeta 3, 3: Planeta 4, 4: Sol
+    this.currentStep = 0; // 0: Planeta 1, 1: Planeta 2, 2: Planeta 3, 3: Luna, 4: Sol
     this.totalSteps = 5;
 
     this.visitedPlanets = new Set();
+    this.visitedMoon = false;
     this.visitedSun = false;
 
     // DOM Elements
@@ -35,7 +36,7 @@ export class NavigationManager {
       document.getElementById('step-btn-0'),
       document.getElementById('step-btn-1'),
       document.getElementById('step-btn-2'),
-      document.getElementById('step-btn-3'),
+      document.getElementById('step-btn-moon'),
       document.getElementById('step-btn-4')
     ];
 
@@ -132,7 +133,8 @@ export class NavigationManager {
         this.updateTimelineUI();
       };
       this.memoryModal.onNextAfterLastMemory = () => {
-        this.focusSunAndPrompt();
+        // Al terminar el capítulo 3 (Galería), llevar al siguiente paso: La Luna de Snoopy
+        this.goToStep(3);
       };
     }
 
@@ -188,6 +190,17 @@ export class NavigationManager {
     }
   }
 
+  markMoonVisited() {
+    this.visitedMoon = true;
+    const moonBtn = this.stepButtons[3];
+    if (moonBtn) {
+      moonBtn.classList.add('visited');
+      moonBtn.classList.remove('unvisited');
+      const statusIcon = moonBtn.querySelector('.step-status-icon');
+      if (statusIcon) statusIcon.textContent = '✓';
+    }
+  }
+
   markSunVisited() {
     this.visitedSun = true;
     const sunBtn = this.stepButtons[4];
@@ -232,8 +245,13 @@ export class NavigationManager {
       this.spaceGuidance.classList.remove('visible');
     }
 
-    if (stepIndex < 4) {
-      // 1. Visitar Planeta de Recuerdos (Capítulo 1-4)
+    if (stepIndex !== 3) {
+      this.isInMoonView = false;
+      if (this.onExitMoon) this.onExitMoon();
+    }
+
+    if (stepIndex < 3) {
+      // 1. Visitar Planeta de Recuerdos (Capítulo 1-3)
       if (this.memoryPlanets) {
         this.memoryPlanets.restorePlanetsPosition(1.0);
         this.memoryPlanets.setPlanetsDimmed(false, 1.0);
@@ -241,18 +259,75 @@ export class NavigationManager {
       this.letterModal.hideSection();
       this.markPlanetVisited(stepIndex);
       this.memoryModal.openMemory(stepIndex);
+    } else if (stepIndex === 3) {
+      // 2. Visitar la Luna de Snoopy
+      this.visitMoon();
     } else if (stepIndex === 4) {
-      // 2. Enfocar el Sol Central y dar la instrucción de 3 toques
+      // 3. Enfocar el Sol Central y dar la instrucción de 3 toques
       this.focusSunAndPrompt();
     }
   }
 
+  visitMoon() {
+    this.currentStep = 3;
+    this.isInMoonView = true;
+    this.markMoonVisited();
+    this.updateTimelineUI();
+
+    if (this.memoryModal) {
+      if (typeof this.memoryModal.closeMemory === 'function') {
+        this.memoryModal.closeMemory();
+      } else if (typeof this.memoryModal.closeModal === 'function') {
+        this.memoryModal.closeModal();
+      }
+    }
+
+    const snoopyTargetPos = new THREE.Vector3(0, 81.6, -134.6);
+    const flightDuration = 3.2;
+
+    this.sound.playStardustChime();
+
+    // Enviar a Snoopy en su avión volador hacia la Luna
+    if (this.snoopyPlane) {
+      this.snoopyPlane.flyToPlanet(snoopyTargetPos, flightDuration);
+    }
+
+    // Salto y saludo alegre de Snoopy en la Luna
+    if (this.memoryPlanets) {
+      this.memoryPlanets.triggerMoonSnoopyClick();
+    }
+
+    // Cámara en 3ra persona detrás de Snoopy
+    if (this.snoopyPlane) {
+      this.camera.escortCompanionToPlanet(this.snoopyPlane.group, snoopyTargetPos, flightDuration, () => {
+        const btnExitMoon = document.getElementById('btn-exit-moon');
+        if (btnExitMoon) btnExitMoon.classList.add('visible');
+      });
+    }
+
+    this.showToast('🌙 🐾 ¡Aterrizaste en la Luna con Snoopy! Toca a Snoopy para saludarlo ✨', '🌙');
+  }
+
   focusSunAndPrompt() {
     this.currentStep = 4;
+    this.isInMoonView = false;
+    if (this.onExitMoon) this.onExitMoon();
     this.updateTimelineUI();
 
     if (this.spaceGuidance) {
       this.spaceGuidance.classList.remove('visible');
+    }
+
+    // Ocultar botón de salida de la luna si estaba visible
+    const btnExitMoon = document.getElementById('btn-exit-moon');
+    if (btnExitMoon) btnExitMoon.classList.remove('visible');
+
+    if (this.memoryModal) {
+      if (typeof this.memoryModal.closeMemory === 'function') {
+        this.memoryModal.closeMemory();
+      } else if (typeof this.memoryModal.closeModal === 'function') {
+        this.memoryModal.closeModal();
+      }
     }
 
     if (this.memoryModal) {
@@ -489,12 +564,12 @@ export class NavigationManager {
     } else if (!this.visitedPlanets.has(2)) {
       this.stepButtons[2]?.classList.add('walkthrough-highlight');
       if (guidanceEl) guidanceEl.innerHTML = '✨ <strong>Paso 3:</strong> Descubre la galería en el <strong>Planeta 3 (Capítulo III)</strong>';
-    } else if (!this.visitedPlanets.has(3)) {
+    } else if (!this.visitedMoon) {
       this.stepButtons[3]?.classList.add('walkthrough-highlight');
-      if (guidanceEl) guidanceEl.innerHTML = '✨ <strong>Paso 4:</strong> Explora el <strong>Planeta 4 (Capítulo IV)</strong>';
+      if (guidanceEl) guidanceEl.innerHTML = '🌙 ✨ <strong>Paso 4:</strong> ¡Viaja a la <strong>Luna con Snoopy</strong> 🐾!';
     } else {
       this.stepButtons[4]?.classList.add('walkthrough-highlight');
-      if (guidanceEl) guidanceEl.innerHTML = '☀️ ✨ ¡Todos los recuerdos explorados! Toca el <strong>Sol Central</strong> para detonar la supernova 💥';
+      if (guidanceEl) guidanceEl.innerHTML = '☀️ ✨ ¡Todo explorado! Toca el <strong>Sol Central</strong> para detonar la supernova 💥';
     }
   }
 

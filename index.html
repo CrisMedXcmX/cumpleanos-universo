@@ -108,9 +108,9 @@
           <span class="step-num">3</span>
           <span class="step-status-icon">○</span>
         </button>
-        <button class="timeline-step unvisited" data-type="planet" data-index="3" id="step-btn-3" title="Planeta 4">
-          <span class="step-planet-icon">✨</span>
-          <span class="step-num">4</span>
+        <button class="timeline-step moon-step unvisited" data-type="moon" data-index="3" id="step-btn-moon" title="La Luna de Snoopy">
+          <span class="step-moon-icon">🌙</span>
+          <span class="step-label">Luna 🐾</span>
           <span class="step-status-icon">○</span>
         </button>
         <button class="timeline-step sun-step unvisited" data-type="sun" data-index="4" id="step-btn-4" title="El Sol Central">
@@ -226,9 +226,11 @@
 
         <div class="memory-photo-frame">
           <div class="photo-glow-border"></div>
-          <img src="assets/foto1.jpg" alt="Recuerdo especial" class="memory-photo" id="memory-img" />
+          <img src="assets/foto1.jpeg" alt="Recuerdo especial" class="memory-photo" id="memory-img" />
           <div class="photo-overlay-sparkle">✦</div>
         </div>
+
+        <p class="memory-desc" id="memory-desc"></p>
       </div>
 
       <!-- Vista de Galería con 6 Espacios de Imágenes + Texto (Capítulo III Especial) -->
@@ -239,6 +241,7 @@
             <span class="memory-date" id="gallery-date">Colección Especial</span>
           </div>
           <h3 class="memory-title" id="gallery-main-title">6 Momentos que Hacen Sonreír mi Corazón</h3>
+          <p class="memory-desc" id="gallery-main-desc"></p>
         </div>
         <div class="gallery-grid-6" id="gallery-grid-container">
           <!-- Se llena dinámicamente con los 6 items -->
@@ -355,6 +358,20 @@
         Encontraste mi estrella secreta: Que cada uno de tus sueños más hermosos se haga realidad. Eres mi luz eterna.
       </p>
       <button class="cosmic-button primary-glow" id="btn-dismiss-secret">Guardar en el corazón ❤️</button>
+    </div>
+  </div>
+
+  <!-- Modal de Zoom / Vista Previa en Pantalla Completa para Fotos de la Galería -->
+  <div class="lightbox-modal-backdrop" id="gallery-lightbox-modal">
+    <div class="lightbox-card">
+      <button class="lightbox-close-btn" id="btn-close-lightbox" aria-label="Cerrar vista ampliada">✕</button>
+      <div class="lightbox-img-wrap">
+        <img src="" alt="Foto ampliada" id="lightbox-img" class="lightbox-img" />
+      </div>
+      <div class="lightbox-info">
+        <h3 class="lightbox-title" id="lightbox-title"></h3>
+        <p class="lightbox-desc" id="lightbox-desc"></p>
+      </div>
     </div>
   </div>
 
