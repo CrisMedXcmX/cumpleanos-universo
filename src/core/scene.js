@@ -86,11 +86,13 @@ export class AppScene {
     this.height = window.innerHeight;
     this.camera.aspect = this.width / this.height;
 
-    // Adaptación dinámica de FOV para móviles verticales
+    // Adaptación dinámica de FOV según dimensiones de pantalla y orientación
     if (this.width < 768 && this.width < this.height) {
-      this.camera.fov = 66;
+      this.camera.fov = 66; // Modo vertical móvil
+    } else if (this.height <= 550) {
+      this.camera.fov = 48; // Modo horizontal panorámico compacto
     } else {
-      this.camera.fov = 55;
+      this.camera.fov = 55; // Desktop estándar
     }
 
     this.camera.updateProjectionMatrix();

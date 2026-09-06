@@ -1620,3 +1620,352 @@
     min-width: 120px;
   }
 }
+
+/* ========================================================================= */
+/* OPTIMIZACIÓN EXHAUSTIVA PARA VISIÓN HORIZONTAL (LANDSCAPE & SCREENS H < 620px) */
+/* ========================================================================= */
+
+@media (orientation: landscape) and (max-height: 620px) {
+  /* 1. HUD & DOCK INFERIOR */
+  .universe-hud {
+    bottom: max(0.35rem, env(safe-area-inset-bottom));
+    max-width: 95vw;
+  }
+
+  .hud-floating-dock {
+    padding: 0.2rem 0.45rem;
+    gap: 0.25rem;
+  }
+
+  .dock-arrow-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .dock-png-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .timeline-step {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+    gap: 0.25rem;
+  }
+
+  .timeline-step .step-status-icon {
+    font-size: 0.65rem;
+  }
+
+  .timeline-step .step-label {
+    font-size: 0.72rem;
+  }
+
+  /* 2. GUÍA Y BOTONES DE SALIDA */
+  .space-guidance-pill {
+    top: 2.8rem;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.74rem;
+    max-width: 85vw;
+  }
+
+  .guidance-png-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .exit-moon-btn {
+    top: 2.8rem;
+    padding: 0.35rem 1.0rem;
+    font-size: 0.76rem;
+  }
+
+  /* 3. MODAL DE RECUERDOS (VISTA INDIVIDUAL EN MODO 2 COLUMNAS / HORIZONTAL) */
+  .modal-backdrop {
+    padding: 0.5rem;
+  }
+
+  .memory-card-modal {
+    padding: 0.85rem 1.2rem;
+    max-height: 94vh;
+    width: 92vw;
+    max-width: 780px;
+    gap: 0.5rem;
+    border-radius: 16px;
+  }
+
+  .npc-dialogue-header {
+    gap: 0.5rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .npc-avatar-wrap {
+    width: 36px;
+    height: 36px;
+  }
+
+  .npc-snoopy-face-svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .npc-speaker-badge {
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+  }
+
+  .npc-speaker-name {
+    font-size: 0.84rem;
+  }
+
+  .npc-dialogue-bubble {
+    padding: 0.4rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .npc-dialogue-text {
+    font-size: 0.85rem;
+    line-height: 1.35;
+    min-height: 1.8rem;
+  }
+
+  /* Layout de Dos Columnas en Horizontal para foto e historia */
+  .single-memory-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: auto 1fr;
+    column-gap: 1.1rem;
+    row-gap: 0.2rem;
+    align-items: start;
+  }
+
+  .single-memory-layout .memory-meta {
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 0.1rem;
+  }
+
+  .single-memory-layout .memory-title {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 1.2rem;
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+
+  .single-memory-layout .memory-photo-frame {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    min-height: 140px;
+    max-height: 190px;
+    height: 100%;
+    padding: 0.2rem;
+    border-radius: 12px;
+    align-self: center;
+  }
+
+  .single-memory-layout .memory-photo {
+    max-height: 180px;
+    max-width: 100%;
+  }
+
+  .single-memory-layout .memory-desc {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    max-height: 130px;
+    overflow-y: auto;
+    padding-right: 0.3rem;
+  }
+
+  .memory-card-footer {
+    margin-top: 0.2rem;
+    padding-top: 0.4rem;
+    gap: 0.4rem;
+  }
+
+  .memory-card-footer .cosmic-button {
+    padding: 0.42rem 0.95rem;
+    font-size: 0.76rem;
+    min-width: 85px;
+  }
+
+  .memory-indicator {
+    font-size: 0.74rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  /* 4. GALERÍA DE 6 ELEMENTOS EN HORIZONTAL */
+  .memory-card-modal.is-gallery {
+    max-width: 880px;
+    width: 95vw;
+    max-height: 94vh;
+    padding: 0.85rem 1.2rem;
+  }
+
+  .gallery-6-layout {
+    gap: 0.6rem;
+  }
+
+  .gallery-grid-6 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+
+  .gallery-thumb-wrap {
+    height: 90px;
+  }
+
+  .gallery-item-info {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .gallery-item-title {
+    font-size: 0.74rem;
+  }
+
+  .gallery-item-desc {
+    font-size: 0.66rem;
+    line-height: 1.25;
+  }
+
+  /* 5. CARTA Y PERGAMINO EN HORIZONTAL */
+  .envelope-card {
+    width: 300px;
+    height: 180px;
+    padding: 0.8rem;
+  }
+
+  .envelope-front {
+    padding: 0.8rem;
+    gap: 0.4rem;
+  }
+
+  .stamp-mark {
+    font-size: 1.6rem;
+  }
+
+  .to-label {
+    font-size: 0.9rem;
+  }
+
+  .wax-seal {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.72rem;
+  }
+
+  .parchment-container {
+    padding: 1.1rem 1.6rem;
+    height: 90vh;
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .parchment-header {
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .parchment-title {
+    font-size: 1.35rem;
+    margin: 0.1rem 0;
+  }
+
+  .parchment-date {
+    font-size: 0.78rem;
+  }
+
+  .parchment-body {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin-bottom: 0.4rem;
+  }
+
+  .parchment-body p {
+    margin-bottom: 0.65rem;
+  }
+
+  .parchment-footer {
+    padding-top: 0.35rem;
+    gap: 0.3rem;
+  }
+
+  .parchment-sign-off {
+    font-size: 0.85rem;
+  }
+
+  .parchment-signature {
+    font-size: 1.1rem;
+  }
+
+  #btn-after-letter {
+    padding: 0.35rem 0.9rem !important;
+    font-size: 0.74rem !important;
+  }
+
+  /* 6. MODAL FINALE EN HORIZONTAL */
+  .finale-screen {
+    padding: 0.8rem;
+  }
+
+  .finale-main-reveal {
+    padding: 1.2rem 1.6rem;
+    max-width: 620px;
+    gap: 0.65rem;
+    border-radius: 18px;
+  }
+
+  .finale-title {
+    font-size: 1.55rem;
+  }
+
+  .finale-love-msg {
+    font-size: 1.1rem;
+  }
+
+  .finale-wish-msg {
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .finale-actions {
+    margin-top: 0.5rem;
+    gap: 0.6rem;
+  }
+
+  .cosmic-button.special-heart-btn {
+    padding: 0.65rem 1.6rem;
+    font-size: 0.85rem;
+  }
+
+  .finale-sub-actions .cosmic-button {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.75rem;
+  }
+
+  /* 7. LIGHTBOX FOTOS EN HORIZONTAL */
+  .lightbox-card {
+    padding: 1rem 1.2rem;
+    max-height: 94vh;
+    gap: 0.5rem;
+  }
+
+  .lightbox-img-wrap {
+    max-height: 52vh;
+    min-height: 120px;
+  }
+
+  .lightbox-img {
+    max-height: 50vh;
+  }
+
+  .lightbox-title {
+    font-size: 0.95rem;
+  }
+
+  .lightbox-desc {
+    font-size: 0.78rem;
+  }
+}
+

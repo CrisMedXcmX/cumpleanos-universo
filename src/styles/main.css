@@ -574,3 +574,84 @@ html, body {
     letter-spacing: 2px;
   }
 }
+
+/* Optimización para orientación horizontal (móviles y tablets landscape / pantallas bajas) */
+@media (orientation: landscape) and (max-height: 600px) {
+  .top-nav {
+    padding: 0.4rem 1.2rem;
+  }
+
+  .nav-brand {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+
+  .nav-brand .brand-text {
+    font-size: 0.8rem;
+  }
+
+  .nav-icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav-png-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .game-title-section {
+    padding: 0.5rem 1rem;
+  }
+
+  .game-glass-panel {
+    max-width: 640px;
+    width: 94vw;
+    padding: 0.9rem 1.5rem;
+    gap: 0.45rem;
+    border-radius: 18px;
+  }
+
+  .game-badge {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+  }
+
+  .game-main-title {
+    font-size: clamp(1.4rem, 4.5vw, 1.85rem);
+    margin: 0;
+  }
+
+  .game-subtitle {
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+
+  .game-dedication {
+    font-size: 0.75rem;
+    margin: 0;
+  }
+
+  .game-start-action {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.2rem;
+  }
+
+  .game-press-start-btn {
+    padding: 0.6rem 1.6rem;
+    font-size: 0.82rem;
+    letter-spacing: 1.2px;
+  }
+
+  .game-pulse-prompt {
+    font-size: 0.7rem;
+  }
+
+  .game-title-footer {
+    font-size: 0.72rem;
+    margin-top: 0;
+  }
+}
+
